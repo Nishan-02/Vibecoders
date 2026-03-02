@@ -1,0 +1,5 @@
+{
+  "name": "Resonance",
+  "description": "A frictionless, zero-typing mental health ecosystem featuring haptic breathing habits, shake-to-SOS emergency alerts, and microphone-driven calming interventions.",
+  "requestFramePermissions": ["microphone", "geolocation"]
+}
