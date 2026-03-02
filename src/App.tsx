@@ -5,9 +5,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Shield, Heart, Wind, Zap, Settings2, CheckCircle2, AlertTriangle, MapPin } from 'lucide-react';
+import { Shield, Heart, Wind, Zap, Settings2, CheckCircle2, AlertTriangle, MapPin, UserRound } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { cn } from './lib/utils';
+import { selectAnchorContact, loadAnchorContact, type AnchorContact } from './lib/contactPicker';
 
 // --- Types ---
 interface UserState {
@@ -21,6 +22,7 @@ interface UserState {
 
 export default function App() {
   const [user, setUser] = useState<UserState | null>(null);
+  const [anchor, setAnchor] = useState<AnchorContact | null>(null);
   const [mode, setMode] = useState<'idle' | 'habit' | 'sos' | 'exhale'>('idle');
   const [isHolding, setIsHolding] = useState(false);
   const [holdProgress, setHoldProgress] = useState(0);
@@ -48,6 +50,10 @@ export default function App() {
       setUser(newUser);
       localStorage.setItem('resonance_user', JSON.stringify(newUser));
     }
+
+    // Hydrate anchor contact from contactPicker storage
+    const savedAnchor = loadAnchorContact();
+    if (savedAnchor) setAnchor(savedAnchor);
 
     // Setup Shake Detection
     const handleMotion = (event: DeviceMotionEvent) => {
@@ -92,15 +98,16 @@ export default function App() {
     // Get Location
     navigator.geolocation.getCurrentPosition(async (pos) => {
       const { latitude, longitude } = pos.coords;
-      const locationUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-      
-      const savedUser = JSON.parse(localStorage.getItem('resonance_user') || '{}');
-      if (savedUser.anchorPhone) {
+      const locationUrl = `https://maps.google.com/?q=${latitude},${longitude}`;
+
+      // Read anchor from contactPicker localStorage (anchorContact key)
+      const savedAnchor = loadAnchorContact();
+      if (savedAnchor?.phone) {
         try {
           await fetch('/api/sos', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ anchorPhone: savedUser.anchorPhone, locationUrl }),
+            body: JSON.stringify({ anchorPhone: savedAnchor.phone, locationUrl }),
           });
         } catch (e) {
           console.error("SOS API Error", e);
@@ -148,7 +155,7 @@ export default function App() {
   const completeHabit = () => {
     setIsHolding(false);
     if (holdTimerRef.current) clearInterval(holdTimerRef.current);
-    
+
     setUser(prev => {
       if (!prev) return null;
       const today = new Date().toDateString();
@@ -223,14 +230,14 @@ export default function App() {
     const interval = setInterval(() => {
       setParticles(prev => prev.map(p => {
         let { x, y, vx, vy } = p;
-        
+
         // Push particles away based on exhale intensity
         if (exhaleIntensity > 0.3) {
           const centerX = window.innerWidth / 2;
           const centerY = window.innerHeight / 2;
           const dx = x - centerX;
           const dy = y - centerY;
-          const dist = Math.sqrt(dx*dx + dy*dy);
+          const dist = Math.sqrt(dx * dx + dy * dy);
           const force = exhaleIntensity * 20;
           vx += (dx / dist) * force;
           vy += (dy / dist) * force;
@@ -254,16 +261,16 @@ export default function App() {
   }, [mode, exhaleIntensity]);
 
   // --- UI Helpers ---
-  const setAnchor = async () => {
-    // Fallback: Prompt (Since we can't use standard inputs as per constraints)
-    const phone = window.prompt("Enter Anchor Phone Number (e.g. +1234567890):");
-    if (phone) {
-      setUser(prev => {
-        if (!prev) return null;
-        const updated = { ...prev, anchorPhone: phone };
-        localStorage.setItem('resonance_user', JSON.stringify(updated));
-        return updated;
-      });
+  const handleSelectAnchor = async () => {
+    const result = await selectAnchorContact();
+    if (result.success) {
+      setAnchor(result.contact);
+    } else {
+      const err = result as import('./lib/contactPicker').ContactPickerError;
+      // Only show alert for real errors — not user cancellations
+      if (err.errorCode !== 'USER_CANCELLED') {
+        alert(`Could not select anchor: ${err.message}`);
+      }
     }
   };
 
@@ -271,13 +278,13 @@ export default function App() {
 
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center p-6 select-none touch-none bg-[#050505] text-white overflow-hidden font-sans">
-      
+
       {/* Background Ambient Glow */}
       <div className="absolute inset-0 bg-radial-gradient from-emerald-500/5 to-transparent pointer-events-none" />
 
       <AnimatePresence mode="wait">
         {mode === 'idle' && (
-          <motion.div 
+          <motion.div
             key="idle"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -290,7 +297,7 @@ export default function App() {
             </div>
 
             <div className="flex flex-col items-center gap-4">
-              <button 
+              <button
                 onClick={startHabit}
                 className="group relative w-32 h-32 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center transition-all hover:bg-emerald-500/20 active:scale-95"
               >
@@ -305,17 +312,19 @@ export default function App() {
                 <span className="text-3xl font-display font-bold">{user.streak}</span>
                 <span className="text-[10px] uppercase tracking-widest text-zinc-500">Streak</span>
               </div>
-              <button 
-                onClick={setAnchor}
+              <button
+                onClick={handleSelectAnchor}
                 className="flex flex-col items-center gap-1 group"
               >
                 <div className={cn(
                   "p-2 rounded-lg transition-colors",
-                  user.anchorPhone ? "bg-emerald-500/10 text-emerald-400" : "bg-zinc-800 text-zinc-500 group-hover:bg-zinc-700"
+                  anchor ? "bg-emerald-500/10 text-emerald-400" : "bg-zinc-800 text-zinc-500 group-hover:bg-zinc-700"
                 )}>
-                  {user.anchorPhone ? <CheckCircle2 className="w-5 h-5" /> : <Settings2 className="w-5 h-5" />}
+                  {anchor ? <CheckCircle2 className="w-5 h-5" /> : <UserRound className="w-5 h-5" />}
                 </div>
-                <span className="text-[10px] uppercase tracking-widest text-zinc-500">Anchor</span>
+                <span className="text-[10px] uppercase tracking-widest text-zinc-500">
+                  {anchor ? anchor.name : 'Anchor'}
+                </span>
               </button>
             </div>
 
@@ -326,7 +335,7 @@ export default function App() {
         )}
 
         {mode === 'habit' && (
-          <motion.div 
+          <motion.div
             key="habit"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -387,7 +396,7 @@ export default function App() {
         )}
 
         {mode === 'sos' && (
-          <motion.div 
+          <motion.div
             key="sos"
             initial={{ opacity: 0, scale: 1.2 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -401,13 +410,14 @@ export default function App() {
               <p className="text-white/80 font-medium">Alerting your anchor and sharing location...</p>
             </div>
             <div className="flex items-center gap-4 text-sm font-semibold bg-black/20 px-6 py-3 rounded-full">
-              <MapPin className="w-4 h-4" /> {user.anchorPhone || "No Anchor Set"}
+              <MapPin className="w-4 h-4" />
+              {anchor ? `${anchor.name} · ${anchor.phone}` : 'No Anchor Set'}
             </div>
           </motion.div>
         )}
 
         {mode === 'exhale' && (
-          <motion.div 
+          <motion.div
             key="exhale"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -433,7 +443,7 @@ export default function App() {
               </div>
             </div>
 
-            <button 
+            <button
               onClick={() => setMode('idle')}
               className="absolute bottom-12 px-8 py-4 rounded-full bg-white/5 border border-white/10 text-sm font-medium hover:bg-white/10 transition-colors"
             >
