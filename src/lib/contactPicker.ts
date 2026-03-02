@@ -23,8 +23,14 @@
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-/** The stored anchor contact shape (used throughout the app). */
+/**
+ * The stored anchor contact shape (used throughout the app).
+ * `label` is optional for backward compatibility with data
+ * saved before the labelled selectAnchor() function was added.
+ */
 export interface AnchorContact {
+    /** Human-readable relationship label, e.g. "Mom", "Dad", "Favourite" */
+    label?: string;
     name: string;
     phone: string;
 }
@@ -219,6 +225,116 @@ export async function selectAnchorContact(): Promise<ContactPickerResponse> {
         return { success: true, contact };
     } catch (err: unknown) {
         // DOMException thrown when user cancels on some browsers
+        if (err instanceof DOMException && err.name === 'AbortError') {
+            return {
+                success: false,
+                errorCode: 'USER_CANCELLED',
+                message: 'Contact selection was cancelled.',
+            };
+        }
+
+        return {
+            success: false,
+            errorCode: 'UNKNOWN',
+            message:
+                err instanceof Error ? err.message : 'An unexpected error occurred.',
+        };
+    }
+}
+
+// ─── Labelled Anchor Selector ─────────────────────────────────────────────────
+
+/**
+ * Opens the native contact picker with a relationship label (e.g. "Mom", "Dad").
+ * Saves `{ label, name, phone }` to localStorage under `"anchorContact"`.
+ *
+ * This is the primary entry point for the anchor selection UI.
+ * `selectAnchorContact()` (no label) remains for backward compatibility.
+ *
+ * FUTURE-PROOF: To migrate to Expo Contacts, replace ONLY this function's
+ * body with the expo-contacts equivalent — the UI never changes.
+ *
+ * @param label - Human-readable relationship label shown in the UI.
+ *
+ * @example
+ * ```ts
+ * const result = await selectAnchor('Mom');
+ * if (result.success) {
+ *   console.log(result.contact.label, result.contact.name);
+ * }
+ * ```
+ */
+export async function selectAnchor(label: string): Promise<ContactPickerResponse> {
+    // ── Guard: SSR ────────────────────────────────────────────────────────────
+    if (typeof window === 'undefined') {
+        return {
+            success: false,
+            errorCode: 'UNSUPPORTED',
+            message: 'Contact Picker is not available in a server-side environment.',
+        };
+    }
+
+    // ── Guard: Secure context ─────────────────────────────────────────────────
+    if (!window.isSecureContext) {
+        return {
+            success: false,
+            errorCode: 'INSECURE_CONTEXT',
+            message:
+                'Contact Picker requires a secure context (HTTPS or localhost).',
+        };
+    }
+
+    // ── Guard: API availability ───────────────────────────────────────────────
+    if (!('contacts' in navigator) || !navigator.contacts) {
+        return {
+            success: false,
+            errorCode: 'UNSUPPORTED',
+            message:
+                'Contact picker is supported on mobile Chrome only. Open on your Android device.',
+        };
+    }
+
+    // ── Open picker ───────────────────────────────────────────────────────────
+    try {
+        const contacts = await navigator.contacts.select(['name', 'tel'], {
+            multiple: false,
+        });
+
+        if (!contacts || contacts.length === 0) {
+            return {
+                success: false,
+                errorCode: 'USER_CANCELLED',
+                message: 'No contact was selected.',
+            };
+        }
+
+        const raw = contacts[0];
+
+        const rawName = raw.name?.[0]?.trim() ?? '';
+        if (!rawName) {
+            return {
+                success: false,
+                errorCode: 'NO_NAME',
+                message: 'The selected contact does not have a name.',
+            };
+        }
+
+        const rawPhone = raw.tel?.[0]?.trim() ?? '';
+        if (!rawPhone) {
+            return {
+                success: false,
+                errorCode: 'NO_PHONE',
+                message: 'The selected contact does not have a phone number.',
+            };
+        }
+
+        const contact: AnchorContact = { label, name: rawName, phone: rawPhone };
+
+        // Persist { label, name, phone } to localStorage
+        saveToStorage(contact);
+
+        return { success: true, contact };
+    } catch (err: unknown) {
         if (err instanceof DOMException && err.name === 'AbortError') {
             return {
                 success: false,
