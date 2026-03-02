@@ -1,0 +1,68 @@
+﻿Running Gradle task 'assembleDebug'...                          
+flutter : Note: Some input 
+files use or override a 
+deprecated API.
+At line:1 char:89
++ ...  + $env:PATH; flutter 
+pub get; flutter build apk 
+--debug 2>&1 | Out-F ...
++                            
+        ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (Note: S  
+  ome inpu...deprecated AP   
+ I.:String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+Note: Recompile with 
+-Xlint:deprecation for 
+details.
+warning: [options] source 
+value 8 is obsolete and will 
+be removed in a future 
+release
+warning: [options] target 
+value 8 is obsolete and will 
+be removed in a future 
+release
+warning: [options] To 
+suppress warnings about 
+obsolete options, use 
+-Xlint:-options.
+3 warnings
+warning: [options] source 
+value 8 is obsolete and will 
+be removed in a future 
+release
+warning: [options] target 
+value 8 is obsolete and will 
+be removed in a future 
+release
+warning: [options] To 
+suppress warnings about 
+obsolete options, use 
+-Xlint:-options.
+3 warnings
+warning: [options] source 
+value 8 is obsolete and will 
+be removed in a future 
+release
+warning: [options] target 
+value 8 is obsolete and will 
+be removed in a future 
+release
+warning: [options] To 
+suppress warnings about 
+obsolete options, use 
+-Xlint:-options.
+Note: Some input files use 
+or override a deprecated API.
+Note: Recompile with 
+-Xlint:deprecation for 
+details.
+3 warnings
+Running Gradle task 'assembleDebug'...                            344.0s
+ΓêÜ Built build\app\outputs\flutter-apk\app-debug.apk

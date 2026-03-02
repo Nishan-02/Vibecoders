@@ -1,0 +1,23 @@
+﻿Analyzing Hackmatrix...                                         
+
+  error - The named parameter 'createdAt' is required, but there's no corresponding argument - lib\providers\user_provider.dart:5:22 - missing_required_argument
+  error - The named parameter 'createdAt' is required, but there's no corresponding argument - lib\providers\user_provider.dart:35:13 - missing_required_argument
+
+flutter : 2 issues found. 
+(ran in 6.2s)
+At line:1 char:72
++ ... 
+sktop\Flutter\flutter\bin;" 
++ $env:PATH; flutter analyze 
+2>&1 | Out-F ...
++                            
+                  
+~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (2 issue  
+  s found. (ran in 6.2s):S   
+ tring) [], RemoteExcepti    
+on
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 

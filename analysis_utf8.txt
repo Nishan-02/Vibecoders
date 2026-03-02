@@ -1,0 +1,4 @@
+﻿Analyzing Hackmatrix...                                         
+
+   info - Use a 'SizedBox' to add whitespace to a layout - lib\screens\home_screen.dart:166:16 - sized_box_for_whitespace
+

@@ -1,0 +1,8 @@
+﻿Deleting build...                                                    3ms
+Deleting .dart_tool...                                               3ms
+Deleting ephemeral...                                                0ms
+Deleting Generated.xcconfig...                                       0ms
+Deleting flutter_export_environment.sh...                            0ms
+Deleting ephemeral...                                                1ms
+Deleting ephemeral...                                                1ms
+Deleting .flutter-plugins-dependencies...                            1ms

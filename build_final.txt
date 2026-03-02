@@ -1,0 +1,108 @@
+﻿Running Gradle task 'assembleDebug'...                          
+flutter : ../../AppData/Local
+/Pub/Cache/hosted/pub.dev/rec
+ord_linux-0.7.2/lib/record_li
+nux.dart:12:7: Error: The 
+non-abstract class 
+'RecordLinux' is missing 
+implementations for these 
+members:
+At line:1 char:72
++ ... ter\flutter\bin;" + 
+$env:PATH; flutter build apk 
+--debug 2>&1 | Out-F ...
++                            
+        ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (../../A  
+  ppData/L... these member   
+ s::String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+ - RecordMethodChannelPlatfor
+mInterface.startStream
+Try to either
+ - provide an implementation,
+ - inherit an implementation 
+from a superclass or mixin,
+ - mark the class as 
+abstract, or
+ - provide a 'noSuchMethod' 
+implementation.
+class RecordLinux extends 
+RecordPlatform {
+      ^^^^^^^^^^^
+../../AppData/Local/Pub/Cache
+/hosted/pub.dev/record_platfo
+rm_interface-1.5.0/lib/src/re
+cord_platform_interface.dart:
+46:29: Context: 'RecordMethod
+ChannelPlatformInterface.star
+tStream' is defined here.
+  Future<Stream<Uint8List>> 
+startStream(String 
+recorderId, RecordConfig 
+config);
+                            
+^^^^^^^^^^^
+../../AppData/Local/Pub/Cache
+/hosted/pub.dev/record_linux-
+0.7.2/lib/record_linux.dart:3
+6:16: Error: The method 
+'RecordLinux.hasPermission' 
+has fewer named arguments 
+than those of overridden 
+method 'RecordMethodChannelPl
+atformInterface.hasPermission
+'.
+  Future<bool> 
+hasPermission(String 
+recorderId) {
+               ^
+../../AppData/Local/Pub/Cache
+/hosted/pub.dev/record_platfo
+rm_interface-1.5.0/lib/src/re
+cord_platform_interface.dart:
+74:16: Context: This is the 
+overridden method 
+('hasPermission').
+  Future<bool> 
+hasPermission(String 
+recorderId, {bool request = 
+true});
+               ^
+Target 
+kernel_snapshot_program 
+failed: Exception
+
+
+FAILURE: Build failed with 
+an exception.
+
+* What went wrong:
+Execution failed for task ':a
+pp:compileFlutterBuildDebug'.
+> Process 'command 'C:\Users\
+rohit\Desktop\Flutter\flutter
+\bin\flutter.bat'' finished 
+with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace 
+option to get the stack 
+trace.
+> Run with --info or --debug 
+option to get more log 
+output.
+> Run with --scan to get 
+full insights.
+> Get more help at 
+https://help.gradle.org.
+
+BUILD FAILED in 5s
+Running Gradle task 'assembleDebug'...                              6.1s
+Gradle task assembleDebug 
+failed with exit code 1

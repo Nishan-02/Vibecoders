@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "494909975871",
+    "project_id": "resonance-b5854",
+    "storage_bucket": "resonance-b5854.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494909975871:android:a53c308f76225c53be778a",
+        "android_client_info": {
+          "package_name": "com.resonance.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAT4scdDUQbv_PCKHQOgZ890VeI0LUrQJg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
