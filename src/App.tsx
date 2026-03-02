@@ -526,13 +526,13 @@ export default function App() {
       {/* ─── PHASE 3: SOS Triggered ─── */}
       <AnimatePresence>
         {mode === 'sos' && (
-          <motion.div key="sos" initial={{ opacity: 0, scale: 1.2 }} animate={{ opacity: 1, scale: 1 }} className="fixed inset-0 z-[100] bg-red-600 flex flex-col items-center justify-center gap-8 p-12 text-center">
+          <motion.div key="sos" initial={{ opacity: 0, scale: 1.2 }} animate={{ opacity: 1, scale: 1 }} className="fixed inset-0 z-[100] bg-rose-500 flex flex-col items-center justify-center gap-8 p-12 text-center">
             <div className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center animate-pulse"><AlertTriangle className="w-12 h-12 text-white" /></div>
             <div className="space-y-4">
-              <h2 className="text-4xl font-display font-bold tracking-tight">SOS TRIGGERED</h2>
-              <p className="text-white/80 font-medium">Alerting your anchor and sharing location...</p>
+              <h2 className="text-4xl font-display font-bold tracking-tight text-white">SOS TRIGGERED</h2>
+              <p className="text-white/90 font-medium">Alerting your anchor and sharing location...</p>
             </div>
-            <div className="flex items-center gap-4 text-sm font-semibold bg-black/20 px-6 py-3 rounded-full">
+            <div className="flex items-center gap-4 text-sm font-semibold bg-white/20 text-white px-6 py-3 rounded-full">
               <MapPin className="w-4 h-4" />
               {anchor ? `${anchor.name} · ${anchor.phone}` : 'No Anchor Set'}
             </div>
@@ -541,20 +541,20 @@ export default function App() {
 
         {/* ─── PHASE 3: Exhale De-escalation ─── */}
         {mode === 'exhale' && (
-          <motion.div key="exhale" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-[100] overflow-hidden flex flex-col items-center justify-center bg-amber-950/90 text-white">
+          <motion.div key="exhale" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-[100] overflow-hidden flex flex-col items-center justify-center bg-[linear-gradient(135deg,#DFF7FF_0%,#E8ECFF_100%)] text-[#111111]">
             {particles.map(p => (
-              <motion.div key={p.id} className="absolute w-2 h-2 rounded-full bg-emerald-400/40 blur-[1px]" animate={{ x: p.x, y: p.y }} transition={{ duration: 0, ease: "linear" }} />
+              <motion.div key={p.id} className="absolute w-2 h-2 rounded-full bg-[#6c6fff]/40 blur-[1px]" animate={{ x: p.x, y: p.y }} transition={{ duration: 0, ease: "linear" }} />
             ))}
             <div className="relative z-10 flex flex-col items-center gap-8 text-center pointer-events-none">
-              <div className="w-32 h-32 rounded-full border-2 border-emerald-500/30 flex items-center justify-center">
-                <Wind className={cn("w-12 h-12 text-emerald-400 transition-transform", exhaleIntensity > 0.3 && "scale-150")} />
+              <div className="w-32 h-32 rounded-full border-2 border-[#6c6fff]/30 bg-white/50 backdrop-blur-sm flex items-center justify-center">
+                <Wind className={cn("w-12 h-12 text-[#6c6fff] transition-transform", exhaleIntensity > 0.3 && "scale-150")} />
               </div>
               <div className="space-y-2">
-                <h2 className="text-2xl font-display font-bold">Exhale Deeply</h2>
-                <p className="text-zinc-400 text-sm">Blow into the microphone to clear the screen</p>
+                <h2 className="text-2xl font-display font-bold text-[#111111]">Exhale Deeply</h2>
+                <p className="text-[rgba(0,0,0,0.6)] text-sm">Blow into the microphone to clear the screen</p>
               </div>
             </div>
-            <button onClick={() => { setMode('hub'); setOverlay(null); }} className="absolute bottom-12 px-8 py-4 rounded-full bg-white/5 border border-white/10 text-sm font-bold uppercase tracking-widest hover:bg-white/10 transition-colors">
+            <button onClick={() => { setMode('hub'); setOverlay(null); }} className="absolute bottom-12 px-8 py-4 rounded-full bg-[#6c6fff]/10 border border-[#6c6fff]/20 text-[#6c6fff] text-sm font-bold uppercase tracking-widest hover:bg-[#6c6fff]/20 transition-colors">
               I feel better now
             </button>
           </motion.div>
