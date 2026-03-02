@@ -112,59 +112,63 @@ function BreathBallGame({ onClose }: { onClose: () => void }) {
   }, [running]);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full">
+    <div className="flex flex-col items-center justify-center w-full h-full relative">
       <div className="absolute top-6 left-6 z-50">
-        <button onClick={() => { setRunning(false); onClose(); }} className="px-4 py-2 bg-[#6c6fff]/10 border border-[#6c6fff]/20 text-[#6c6fff] font-display text-xs font-bold uppercase tracking-widest rounded-lg hover:bg-[#6c6fff]/20 transition-colors flex items-center gap-2">
+        <button onClick={() => { setRunning(false); onClose(); }} className="px-4 py-2 bg-white/50 border border-[#DDDDDD] text-[#111111] font-display text-xs font-bold uppercase tracking-widest rounded-[12px] hover:bg-white hover:shadow-[0_4px_20px_rgba(0,0,0,0.05)] transition-all flex items-center gap-2">
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
       </div>
 
-      <div className="text-center mb-12">
-        <div className="font-display text-sm font-bold text-zinc-500 uppercase tracking-[0.2em] mb-8">🫧 Breath Ball</div>
+      <div className="text-center mb-12 relative z-10">
+        <div className="font-display text-sm font-bold text-[rgba(0,0,0,0.5)] uppercase tracking-[0.2em] mb-8">🫧 Breath Ball</div>
         <div className={cn(
           "font-display text-3xl font-bold tracking-widest uppercase transition-colors duration-500",
-          phase === 'Inhale' ? 'text-[#6c6fff]' : phase === 'Exhale' ? 'text-emerald-400' : phase === 'Hold' ? 'text-[#a78bfa]' : 'text-zinc-400'
+          phase === 'Inhale' ? 'text-[#a78bfa]' : phase === 'Exhale' ? 'text-emerald-500' : phase === 'Hold' ? 'text-[#6c6fff]' : 'text-[rgba(0,0,0,0.4)]'
         )}>
           {phase}
         </div>
       </div>
 
-      <div className="relative w-[280px] h-[280px]">
+      <div className="relative w-[280px] h-[280px] z-10">
         {/* Glows */}
-        <div className={cn("absolute top-[-2px] left-[10%] right-[10%] h-[4px] blur-[2px] transition-opacity duration-300", activeSide === 'top' ? 'opacity-100' : 'opacity-0')} style={{ background: 'linear-gradient(90deg, transparent, #6c6fff, transparent)' }} />
-        <div className={cn("absolute right-[-2px] top-[10%] bottom-[10%] w-[4px] blur-[2px] transition-opacity duration-300", activeSide === 'right' ? 'opacity-100' : 'opacity-0')} style={{ background: 'linear-gradient(180deg, transparent, #a78bfa, transparent)' }} />
-        <div className={cn("absolute bottom-[-2px] left-[10%] right-[10%] h-[4px] blur-[2px] transition-opacity duration-300", activeSide === 'bottom' ? 'opacity-100' : 'opacity-0')} style={{ background: 'linear-gradient(90deg, transparent, #34d399, transparent)' }} />
-        <div className={cn("absolute left-[-2px] top-[10%] bottom-[10%] w-[4px] blur-[2px] transition-opacity duration-300", activeSide === 'left' ? 'opacity-100' : 'opacity-0')} style={{ background: 'linear-gradient(180deg, transparent, #a78bfa, transparent)' }} />
+        <div className={cn("absolute top-[-2px] left-[10%] right-[10%] h-[4px] blur-[2px] transition-opacity duration-300", activeSide === 'top' ? 'opacity-100' : 'opacity-0')} style={{ background: 'linear-gradient(90deg, transparent, #a78bfa, transparent)' }} />
+        <div className={cn("absolute right-[-2px] top-[10%] bottom-[10%] w-[4px] blur-[2px] transition-opacity duration-300", activeSide === 'right' ? 'opacity-100' : 'opacity-0')} style={{ background: 'linear-gradient(180deg, transparent, #6c6fff, transparent)' }} />
+        <div className={cn("absolute bottom-[-2px] left-[10%] right-[10%] h-[4px] blur-[2px] transition-opacity duration-300", activeSide === 'bottom' ? 'opacity-100' : 'opacity-0')} style={{ background: 'linear-gradient(90deg, transparent, #10b981, transparent)' }} />
+        <div className={cn("absolute left-[-2px] top-[10%] bottom-[10%] w-[4px] blur-[2px] transition-opacity duration-300", activeSide === 'left' ? 'opacity-100' : 'opacity-0')} style={{ background: 'linear-gradient(180deg, transparent, #6c6fff, transparent)' }} />
 
-        {/* Track */}
-        <div className="absolute inset-0 border-2 border-[#6c6fff]/20 rounded-2xl" />
+        {/* Track (Darkened border for visibility on light bg) */}
+        <div className="absolute inset-0 border-2 border-black/10 rounded-[20px] bg-white/20 backdrop-blur-sm" />
 
         {/* Labels */}
-        <div className={cn("absolute -top-7 left-1/2 -translate-x-1/2 font-display text-[10px] uppercase tracking-widest font-bold transition-colors", activeSide === 'top' ? 'text-white' : 'text-zinc-600')}>Inhale</div>
-        <div className={cn("absolute -right-12 top-1/2 -translate-y-1/2 font-display text-[10px] uppercase tracking-widest font-bold transition-colors", activeSide === 'right' ? 'text-white' : 'text-zinc-600')}>Hold</div>
-        <div className={cn("absolute -bottom-7 left-1/2 -translate-x-1/2 font-display text-[10px] uppercase tracking-widest font-bold transition-colors", activeSide === 'bottom' ? 'text-white' : 'text-zinc-600')}>Exhale</div>
-        <div className={cn("absolute -left-12 top-1/2 -translate-y-1/2 font-display text-[10px] uppercase tracking-widest font-bold transition-colors", activeSide === 'left' ? 'text-white' : 'text-zinc-600')}>Hold</div>
+        <div className={cn("absolute -top-7 left-1/2 -translate-x-1/2 font-display text-[10px] uppercase tracking-widest font-bold transition-colors", activeSide === 'top' ? 'text-[#a78bfa]' : 'text-[rgba(0,0,0,0.4)]')}>Inhale</div>
+        <div className={cn("absolute -right-12 top-1/2 -translate-y-1/2 font-display text-[10px] uppercase tracking-widest font-bold transition-colors", activeSide === 'right' ? 'text-[#6c6fff]' : 'text-[rgba(0,0,0,0.4)]')}>Hold</div>
+        <div className={cn("absolute -bottom-7 left-1/2 -translate-x-1/2 font-display text-[10px] uppercase tracking-widest font-bold transition-colors", activeSide === 'bottom' ? 'text-[#10b981]' : 'text-[rgba(0,0,0,0.4)]')}>Exhale</div>
+        <div className={cn("absolute -left-12 top-1/2 -translate-y-1/2 font-display text-[10px] uppercase tracking-widest font-bold transition-colors", activeSide === 'left' ? 'text-[#6c6fff]' : 'text-[rgba(0,0,0,0.4)]')}>Hold</div>
 
         {/* Ball */}
         <div
           ref={ballRef}
-          className="absolute w-6 h-6 rounded-full top-0 left-0 transition-none pointer-events-none"
+          className="absolute rounded-full top-0 left-0 transition-none pointer-events-none"
           style={{
-            background: `radial-gradient(circle at 35% 35%, #fff 0%, ${ballCol} 60%)`,
-            boxShadow: `0 0 18px ${ballCol}, 0 0 36px ${ballCol}66`
+            width: '28px', height: '28px',
+            background: `radial-gradient(circle at 35% 35%, #ffffff 0%, ${ballCol} 70%)`,
+            boxShadow: `0 0 16px ${ballCol}66, inset 0 0 8px rgba(0,0,0,0.1), 0 4px 10px rgba(0,0,0,0.1)`,
+            border: '1px solid rgba(255,255,255,0.8)'
           }}
         />
       </div>
 
-      <div className="mt-16 font-display text-sm font-bold uppercase tracking-widest text-zinc-500">
-        Cycles: <span ref={cycleCountEl} className="text-[#a78bfa] text-xl ml-2">0</span>
+      <div className="mt-16 font-display text-sm font-bold uppercase tracking-widest text-[rgba(0,0,0,0.5)] z-10">
+        Cycles: <span ref={cycleCountEl} className="text-[#a78bfa] text-xl ml-2 font-black">0</span>
       </div>
 
       <button
         onClick={() => setRunning(!running)}
         className={cn(
-          "mt-8 px-8 py-3 rounded-xl font-display text-sm font-bold uppercase tracking-widest transition-all",
-          running ? "bg-rose-500/10 border border-rose-500/30 text-rose-500" : "bg-[#6c6fff]/10 border border-[#6c6fff]/30 text-[#6c6fff] hover:bg-[#6c6fff]/20 hover:shadow-[0_0_20px_rgba(108,111,255,0.2)]"
+          "mt-8 px-8 py-4 rounded-[12px] font-display text-xs font-bold uppercase tracking-widest transition-all z-10",
+          running
+            ? "bg-rose-500 text-white border-transparent shadow-[0_8px_30px_rgba(244,63,94,0.3)] hover:scale-105 active:scale-95"
+            : "bg-white text-[#111111] border border-[#DDDDDD] hover:border-transparent hover:shadow-[0_8px_30px_rgba(0,0,0,0.1)] hover:scale-105 active:scale-95"
         )}
       >
         {running ? '■ Stop' : '▶ Start'}
@@ -186,7 +190,7 @@ export default function App() {
   // Hold Mode State
   const [isHolding, setIsHolding] = useState(false);
   const [holdProgress, setHoldProgress] = useState(0);
-  const holdTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const holdTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const lastBeatRef = useRef(0);
 
   // Exhale Engine State
@@ -353,16 +357,16 @@ export default function App() {
   if (!user) return null;
 
   return (
-    <div className="relative w-full h-screen bg-[#070810] text-[#e8e9f8] font-sans flex flex-col items-center justify-center p-6 overflow-hidden">
+    <div className="relative w-full h-screen bg-[linear-gradient(135deg,#E8ECFF_0%,#F4E8FF_50%,#DFF7FF_100%)] text-[#111111] font-sans flex flex-col items-center justify-center p-6 overflow-hidden">
 
       {/* ─── PHASE 1: Anchor Setup ─── */}
       {mode === 'anchor' && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center text-center">
-          <h1 className="font-display text-4xl font-bold mb-4">Set Your Anchor</h1>
-          <p className="text-zinc-500 mb-12 max-w-sm">Tap the button to pick a trusted contact from your phone. They will receive the SOS alert if you shake your physical device.</p>
+          <h1 className="font-display text-4xl font-bold mb-4 text-[#111111]">Set Your Anchor</h1>
+          <p className="text-[rgba(0,0,0,0.7)] mb-12 max-w-sm">Tap the button to pick a trusted contact from your phone. They will receive the SOS alert if you shake your physical device.</p>
           <button
             onClick={handleSelectAnchorPhase1}
-            className="px-8 py-4 rounded-full bg-[#6c6fff]/10 border border-[#6c6fff]/30 text-[#6c6fff] font-display font-bold uppercase tracking-widest hover:bg-[#6c6fff]/20 transition-all font-sm"
+            className="px-8 py-4 rounded-full bg-[rgba(255,255,255,0.7)] border border-[#DDDDDD] text-[#111111] font-display font-bold uppercase tracking-widest hover:bg-[#FFFFFF] hover:shadow-[0_4px_20px_rgba(0,0,0,0.05)] transition-all font-sm"
           >
             Select Your Anchor
           </button>
@@ -372,7 +376,7 @@ export default function App() {
       {/* ─── PHASE 2: Main Hub (New Redesign) ─── */}
       {mode === 'hub' && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center w-full max-w-[860px]">
-          <div className="font-display text-sm font-bold tracking-[0.2em] uppercase bg-gradient-to-br from-[#6c6fff] to-[#a78bfa] text-transparent bg-clip-text mb-12 opacity-80">
+          <div className="font-display text-sm font-bold tracking-[0.2em] uppercase bg-gradient-to-br from-[#111111] to-[rgba(0,0,0,0.5)] text-transparent bg-clip-text mb-12 opacity-80">
             Resonance
           </div>
 
@@ -380,38 +384,38 @@ export default function App() {
             {/* Grounding Card */}
             <div
               onClick={() => setOverlay('hold')}
-              className="group relative bg-[#0d0f1f] border border-[#7882ff1f] rounded-[20px] p-10 flex flex-col items-center text-center cursor-pointer overflow-hidden transition-all duration-300 hover:border-[#6c6fff]/30 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(108,111,255,0.12)] active:scale-95"
+              className="group relative bg-[rgba(255,255,255,0.7)] backdrop-blur-md border border-[#DDDDDD] rounded-[20px] p-10 flex flex-col items-center text-center cursor-pointer overflow-hidden transition-all duration-300 hover:border-[#FFFFFF] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.05)] active:scale-95"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(108,111,255,0.06),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="text-3xl mb-4 leading-none relative z-10">💓</div>
-              <div className="font-display font-bold text-sm tracking-[0.12em] uppercase text-[#e8e9f8] mb-2 relative z-10">15s Grounding</div>
-              <div className="text-xs text-zinc-400 font-light leading-relaxed relative z-10">Hold to anchor yourself</div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="text-4xl mb-4 leading-none relative z-10 transition-transform group-hover:scale-110 duration-500">💓</div>
+              <div className="font-display font-bold text-sm tracking-[0.12em] uppercase text-[#111111] mb-2 relative z-10">15s Grounding</div>
+              <div className="text-xs text-[rgba(0,0,0,0.7)] font-light leading-relaxed relative z-10">Hold to anchor yourself</div>
             </div>
 
             {/* Breath Ball Card */}
             <div
               onClick={() => setOverlay('breath')}
-              className="group relative bg-[#0d0f1f] border border-[#7882ff1f] rounded-[20px] p-10 flex flex-col items-center text-center cursor-pointer overflow-hidden transition-all duration-300 hover:border-[#6c6fff]/30 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(108,111,255,0.12)] active:scale-95"
+              className="group relative bg-[rgba(255,255,255,0.7)] backdrop-blur-md border border-[#DDDDDD] rounded-[20px] p-10 flex flex-col items-center text-center cursor-pointer overflow-hidden transition-all duration-300 hover:border-[#FFFFFF] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.05)] active:scale-95"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(108,111,255,0.06),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="text-3xl mb-4 leading-none relative z-10">🫧</div>
-              <div className="font-display font-bold text-sm tracking-[0.12em] uppercase text-[#e8e9f8] mb-2 relative z-10">Breath Ball</div>
-              <div className="text-xs text-zinc-400 font-light leading-relaxed relative z-10">Follow the ball to breathe</div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="text-4xl mb-4 leading-none relative z-10 transition-transform group-hover:scale-110 duration-500">🫧</div>
+              <div className="font-display font-bold text-sm tracking-[0.12em] uppercase text-[#111111] mb-2 relative z-10">Breath Ball</div>
+              <div className="text-xs text-[rgba(0,0,0,0.7)] font-light leading-relaxed relative z-10">Follow the ball to breathe</div>
             </div>
 
             {/* Games Card */}
             <div
               onClick={() => setOverlay('games')}
-              className="group relative bg-[#0d0f1f] border border-[#a78bfa33] rounded-[20px] p-10 flex flex-col items-center text-center cursor-pointer overflow-hidden transition-all duration-300 hover:border-[#a78bfa]/50 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(167,139,250,0.15)] active:scale-95"
+              className="group relative bg-[rgba(255,255,255,0.7)] backdrop-blur-md border border-[#DDDDDD] rounded-[20px] p-10 flex flex-col items-center text-center cursor-pointer overflow-hidden transition-all duration-300 hover:border-[#FFFFFF] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.05)] active:scale-95"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(167,139,250,0.06),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="text-3xl mb-4 leading-none relative z-10">🎮</div>
-              <div className="font-display font-bold text-sm tracking-[0.12em] uppercase text-[#e8e9f8] mb-2 relative z-10">Games</div>
-              <div className="text-xs text-zinc-400 font-light leading-relaxed relative z-10">Play to unwind</div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="text-4xl mb-4 leading-none relative z-10 transition-transform group-hover:scale-110 duration-500">🎮</div>
+              <div className="font-display font-bold text-sm tracking-[0.12em] uppercase text-[#111111] mb-2 relative z-10">Games</div>
+              <div className="text-xs text-[rgba(0,0,0,0.7)] font-light leading-relaxed relative z-10">Play to unwind</div>
             </div>
           </div>
 
-          <div className="absolute bottom-12 text-zinc-600 text-[10px] uppercase tracking-[0.2em] flex items-center gap-2">
+          <div className="absolute bottom-12 text-[rgba(0,0,0,0.5)] text-[10px] uppercase tracking-[0.2em] flex items-center gap-2">
             <Zap className="w-3 h-3" /> Shake for Emergency SOS
           </div>
         </motion.div>
@@ -422,17 +426,17 @@ export default function App() {
         {mode === 'hub' && overlay && (
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-[#070810] flex flex-col items-center justify-center p-6"
+            className="fixed inset-0 z-40 bg-[linear-gradient(135deg,#E8ECFF_0%,#F4E8FF_50%,#DFF7FF_100%)] flex flex-col items-center justify-center p-6"
           >
             {/* Hold Overlay */}
             {overlay === 'hold' && (
               <>
                 <div className="absolute top-6 left-6 z-50">
-                  <button onClick={() => setOverlay(null)} className="px-4 py-2 bg-[#6c6fff]/10 border border-[#6c6fff]/20 text-[#6c6fff] font-display text-xs font-bold uppercase tracking-widest rounded-lg hover:bg-[#6c6fff]/20 transition-colors flex items-center gap-2">
+                  <button onClick={() => setOverlay(null)} className="px-4 py-2 bg-white/50 border border-[#DDDDDD] text-[#111111] font-display text-xs font-bold uppercase tracking-widest rounded-[12px] hover:bg-white hover:shadow-[0_4px_20px_rgba(0,0,0,0.05)] transition-all flex items-center gap-2">
                     <ArrowLeft className="w-4 h-4" /> Back
                   </button>
                 </div>
-                <div className="font-display text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-12">💓 15s Grounding</div>
+                <div className="font-display text-[10px] font-bold tracking-[0.2em] uppercase text-[rgba(0,0,0,0.5)] mb-12">💓 15s Grounding</div>
 
                 <div className="relative mb-10">
                   <button
@@ -440,23 +444,26 @@ export default function App() {
                     onPointerUp={handleHoldEnd}
                     onPointerLeave={handleHoldEnd}
                     className={cn(
-                      "w-[120px] h-[120px] rounded-full border-2 border-[#6c6fff] flex items-center justify-center text-[#6c6fff] font-display font-bold text-sm tracking-widest uppercase select-none relative transition-all duration-150",
-                      isHolding ? "bg-[radial-gradient(circle,rgba(108,111,255,0.55)_0%,rgba(108,111,255,0.18)_100%)] shadow-[0_0_40px_rgba(108,111,255,0.35)] scale-95" : "bg-[radial-gradient(circle,rgba(108,111,255,0.25)_0%,rgba(108,111,255,0.06)_100%)]"
+                      "w-[120px] h-[120px] rounded-full flex items-center justify-center font-display font-bold text-sm tracking-widest uppercase select-none relative transition-all duration-150 backdrop-blur-md",
+                      isHolding
+                        ? "bg-[rgba(255,255,255,1)] text-[#111111] border-2 border-transparent shadow-[0_10px_40px_rgba(0,0,0,0.1)] scale-95"
+                        : "bg-[rgba(255,255,255,0.4)] text-[rgba(0,0,0,0.7)] border-2 border-white/50"
                     )}
                   >
                     <svg className="absolute -top-[7px] -left-[7px] w-[134px] h-[134px] -rotate-90 pointer-events-none overflow-visible">
-                      <circle cx="67" cy="67" r="62" fill="none" className="stroke-[#6c6fff]/10" strokeWidth="3" />
+                      <circle cx="67" cy="67" r="62" fill="none" className="stroke-white/50" strokeWidth="3" />
                       <motion.circle
-                        cx="67" cy="67" r="62" fill="none" className="stroke-[#a78bfa]" strokeWidth="3" strokeLinecap="round"
+                        cx="67" cy="67" r="62" fill="none" className="stroke-[#a78bfa]" strokeWidth="4" strokeLinecap="round"
                         strokeDasharray={390} strokeDashoffset={390 * (1 - holdProgress)}
+                        style={{ filter: 'drop-shadow(0 0 6px rgba(167,139,250,0.5))' }}
                       />
                     </svg>
                     {isHolding ? '●' : 'Hold'}
                   </button>
                 </div>
 
-                <motion.div key={user.streak} initial={{ scale: 1.2 }} animate={{ scale: 1 }} className="font-display text-5xl font-bold text-[#6c6fff] leading-none">{user.streak}</motion.div>
-                <div className="text-sm text-zinc-500 mt-2 font-light">streak with anchor</div>
+                <motion.div key={user.streak} initial={{ scale: 1.2 }} animate={{ scale: 1 }} className="font-display text-6xl font-black text-[#111111] leading-none mb-1">{user.streak}</motion.div>
+                <div className="text-xs text-[rgba(0,0,0,0.5)] font-medium uppercase tracking-widest">streak with anchor</div>
               </>
             )}
 
@@ -467,39 +474,39 @@ export default function App() {
             {overlay === 'games' && (
               <>
                 <div className="absolute top-6 left-6 z-50">
-                  <button onClick={() => setOverlay(null)} className="px-4 py-2 bg-[#6c6fff]/10 border border-[#6c6fff]/20 text-[#6c6fff] font-display text-xs font-bold uppercase tracking-widest rounded-lg hover:bg-[#6c6fff]/20 transition-colors flex items-center gap-2">
+                  <button onClick={() => setOverlay(null)} className="px-4 py-2 bg-white/50 border border-[#DDDDDD] text-[#111111] font-display text-xs font-bold uppercase tracking-widest rounded-[12px] hover:bg-white hover:shadow-[0_4px_20px_rgba(0,0,0,0.05)] transition-all flex items-center gap-2">
                     <ArrowLeft className="w-4 h-4" /> Back
                   </button>
                 </div>
-                <div className="font-display text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-500 mb-12">🎮 Games</div>
+                <div className="font-display text-[10px] font-bold tracking-[0.2em] uppercase text-[rgba(0,0,0,0.5)] mb-12">🎮 Games</div>
 
                 <div className="grid grid-cols-2 gap-4 w-full max-w-[480px]">
-                  <div onClick={() => setOverlay('meshtrace')} className="bg-[#a78bfa]/[0.07] border border-[#a78bfa]/20 rounded-[14px] p-6 flex flex-col items-center gap-2 cursor-pointer transition-all hover:bg-[#a78bfa]/15 hover:-translate-y-1 hover:border-[#a78bfa]/40">
+                  <div onClick={() => setOverlay('meshtrace')} className="bg-[rgba(255,255,255,0.7)] backdrop-blur-md border border-white/50 rounded-[20px] p-6 flex flex-col items-center gap-2 cursor-pointer transition-all hover:bg-white hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.07)]">
                     <div className="text-3xl mb-1 mt-2">🎯</div>
-                    <div className="font-display font-bold text-xs tracking-widest uppercase text-[#a78bfa]">MeshTrace</div>
-                    <div className="text-[11px] text-zinc-400 text-center leading-relaxed">Tremor & stress detection</div>
-                    {lastStress && <div className={cn("mt-2 text-[10px] font-bold tracking-widest uppercase px-2 py-1 rounded bg-[#070810]", lastStress === 'calm' ? 'text-emerald-400' : lastStress === 'high' ? 'text-rose-400' : 'text-amber-400')}>State: {lastStress}</div>}
+                    <div className="font-display font-bold text-xs tracking-widest uppercase text-[#111111]">MeshTrace</div>
+                    <div className="text-[11px] text-[rgba(0,0,0,0.6)] text-center leading-relaxed">Tremor & stress detection</div>
+                    {lastStress && <div className={cn("mt-2 text-[10px] font-bold tracking-widest uppercase px-3 py-1.5 rounded-full", lastStress === 'calm' ? 'bg-emerald-100 text-emerald-700' : lastStress === 'high' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700')}>State: {lastStress}</div>}
                   </div>
 
-                  <div className="bg-[#a78bfa]/[0.04] border border-[#a78bfa]/10 rounded-[14px] p-6 flex flex-col items-center gap-2 cursor-not-allowed opacity-60">
+                  <div className="bg-[rgba(255,255,255,0.4)] backdrop-blur-sm border border-black/5 rounded-[20px] p-6 flex flex-col items-center gap-2 cursor-not-allowed opacity-80 mix-blend-luminosity grayscale">
                     <div className="text-3xl mb-1 mt-2">🧩</div>
-                    <div className="font-display font-bold text-xs tracking-widest uppercase text-[#a78bfa]">Mind Tiles</div>
-                    <div className="text-[11px] text-zinc-400 text-center leading-relaxed">Soothing pattern matching</div>
-                    <span className="font-display text-[10px] text-zinc-500 tracking-widest uppercase border border-zinc-500/30 rounded px-2 py-1 mt-2">Coming Soon</span>
+                    <div className="font-display font-bold text-xs tracking-widest uppercase text-[#111111]">Mind Tiles</div>
+                    <div className="text-[11px] text-[rgba(0,0,0,0.6)] text-center leading-relaxed">Soothing pattern matching</div>
+                    <span className="font-display text-[10px] text-[rgba(0,0,0,0.5)] tracking-widest uppercase border border-black/10 rounded-full px-3 py-1 mt-2 bg-black/5">Coming Soon</span>
                   </div>
 
-                  <div className="bg-[#a78bfa]/[0.04] border border-[#a78bfa]/10 rounded-[14px] p-6 flex flex-col items-center gap-2 cursor-not-allowed opacity-60">
+                  <div className="bg-[rgba(255,255,255,0.4)] backdrop-blur-sm border border-black/5 rounded-[20px] p-6 flex flex-col items-center gap-2 cursor-not-allowed opacity-80 mix-blend-luminosity grayscale">
                     <div className="text-3xl mb-1 mt-2">🌊</div>
-                    <div className="font-display font-bold text-xs tracking-widest uppercase text-[#a78bfa]">Flow State</div>
-                    <div className="text-[11px] text-zinc-400 text-center leading-relaxed">Drift through calm waters</div>
-                    <span className="font-display text-[10px] text-zinc-500 tracking-widest uppercase border border-zinc-500/30 rounded px-2 py-1 mt-2">Coming Soon</span>
+                    <div className="font-display font-bold text-xs tracking-widest uppercase text-[#111111]">Flow State</div>
+                    <div className="text-[11px] text-[rgba(0,0,0,0.6)] text-center leading-relaxed">Drift through calm waters</div>
+                    <span className="font-display text-[10px] text-[rgba(0,0,0,0.5)] tracking-widest uppercase border border-black/10 rounded-full px-3 py-1 mt-2 bg-black/5">Coming Soon</span>
                   </div>
 
-                  <div className="bg-[#a78bfa]/[0.04] border border-[#a78bfa]/10 rounded-[14px] p-6 flex flex-col items-center gap-2 cursor-not-allowed opacity-60">
+                  <div className="bg-[rgba(255,255,255,0.4)] backdrop-blur-sm border border-black/5 rounded-[20px] p-6 flex flex-col items-center gap-2 cursor-not-allowed opacity-80 mix-blend-luminosity grayscale">
                     <div className="text-3xl mb-1 mt-2">⭐</div>
-                    <div className="font-display font-bold text-xs tracking-widest uppercase text-[#a78bfa]">Star Garden</div>
-                    <div className="text-[11px] text-zinc-400 text-center leading-relaxed">Grow your constellation</div>
-                    <span className="font-display text-[10px] text-zinc-500 tracking-widest uppercase border border-zinc-500/30 rounded px-2 py-1 mt-2">Coming Soon</span>
+                    <div className="font-display font-bold text-xs tracking-widest uppercase text-[#111111]">Star Garden</div>
+                    <div className="text-[11px] text-[rgba(0,0,0,0.6)] text-center leading-relaxed">Grow your constellation</div>
+                    <span className="font-display text-[10px] text-[rgba(0,0,0,0.5)] tracking-widest uppercase border border-black/10 rounded-full px-3 py-1 mt-2 bg-black/5">Coming Soon</span>
                   </div>
                 </div>
               </>

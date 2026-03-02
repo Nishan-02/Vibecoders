@@ -4,23 +4,29 @@
 @theme {
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Syne", sans-serif;
-  
-  --color-accent: #6c6fff;
-  --color-accent2: #a78bfa;
+
+  --color-accent: #FFFFFF;
+  --color-accent2: #DDDDDD;
 }
 
 @layer base {
   body {
-    @apply bg-[#070810] text-[#e8e9f8] overflow-hidden;
+    @apply bg-[#E8ECFF] text-[#111111] overflow-hidden;
   }
 }
 
 @keyframes pulse-ring {
-  0% { transform: scale(0.8); opacity: 0.5; }
-  100% { transform: scale(2); opacity: 0; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
 }
 
 .animate-pulse-ring {
   animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
-
