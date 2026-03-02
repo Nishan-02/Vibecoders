@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Shield, Heart, Wind, Zap, Settings2, CheckCircle2, AlertTriangle, MapPin, UserRound } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { cn } from './lib/utils';
-import { selectAnchorContact, loadAnchorContact, type AnchorContact } from './lib/contactPicker';
+import { selectAnchor, loadAnchorContact, type AnchorContact } from './lib/contactPicker';
 import { getCurrentLocation, type LocationError } from './lib/location';
 
 // --- Types ---
@@ -143,15 +143,18 @@ export default function App() {
     setIsHolding(true);
     const startTime = Date.now();
     const duration = 15000;
+    // 60-BPM heartbeat haptic: 80ms vibration every 1000ms
+    let lastBeat = 0;
 
     holdTimerRef.current = setInterval(() => {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
       setHoldProgress(progress);
 
-      // Rhythmic Haptics
-      if (navigator.vibrate && Math.floor(elapsed / 500) % 2 === 0) {
-        navigator.vibrate(50);
+      // Rhythmic Haptics — one pulse per second (60 BPM)
+      if (navigator.vibrate && elapsed - lastBeat >= 1000) {
+        navigator.vibrate(80);
+        lastBeat = elapsed;
       }
 
       if (progress >= 1) {
@@ -275,13 +278,19 @@ export default function App() {
   }, [mode, exhaleIntensity]);
 
   // --- UI Helpers ---
+  // Opens the anchor contact picker with a label selected via 3 cards.
+  // In the main App we cycle through Mom → Dad → Favourite on repeated taps.
   const handleSelectAnchor = async () => {
-    const result = await selectAnchorContact();
+    // Derive next label based on current anchor label
+    const labels = ['Mom', 'Dad', 'Favourite'];
+    const currentIdx = anchor?.label ? labels.indexOf(anchor.label) : -1;
+    const nextLabel = labels[(currentIdx + 1) % labels.length];
+
+    const result = await selectAnchor(nextLabel);
     if (result.success) {
       setAnchor(result.contact);
     } else {
       const err = result as import('./lib/contactPicker').ContactPickerError;
-      // Only show alert for real errors — not user cancellations
       if (err.errorCode !== 'USER_CANCELLED') {
         alert(`Could not select anchor: ${err.message}`);
       }
@@ -435,7 +444,7 @@ export default function App() {
             key="exhale"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="absolute inset-0 overflow-hidden flex flex-col items-center justify-center"
+            className="absolute inset-0 overflow-hidden flex flex-col items-center justify-center bg-amber-950/80"
           >
             {/* Particles */}
             {particles.map(p => (
