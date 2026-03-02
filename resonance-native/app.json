@@ -1,0 +1,62 @@
+{
+  "expo": {
+    "name": "Resonance",
+    "slug": "resonance-native",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#050505"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Resonance needs your location to send it during an SOS alert.",
+        "NSContactsUsageDescription": "Resonance needs your contacts to let you pick a trusted anchor person.",
+        "NSMicrophoneUsageDescription": "Resonance uses the microphone to detect your exhale during de-escalation."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#050505",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.READ_CONTACTS",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.VIBRATE"
+      ],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Resonance needs your location to send it during an SOS alert."
+        }
+      ],
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Resonance needs your contacts to let you pick a trusted anchor person."
+        }
+      ],
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Resonance uses the microphone to detect your exhale during de-escalation."
+        }
+      ]
+    ]
+  }
+}
