@@ -5,11 +5,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Shield, Heart, Wind, Zap, Settings2, CheckCircle2, AlertTriangle, MapPin, UserRound } from 'lucide-react';
+import { Shield, Heart, Wind, Zap, Settings2, CheckCircle2, AlertTriangle, MapPin, UserRound, Target } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { cn } from './lib/utils';
 import { selectAnchor, loadAnchorContact, type AnchorContact } from './lib/contactPicker';
 import { getCurrentLocation, type LocationError } from './lib/location';
+import { MeshTraceGame } from './MeshTraceGame';
 
 // --- Types ---
 interface UserState {
@@ -24,7 +25,8 @@ interface UserState {
 export default function App() {
   const [user, setUser] = useState<UserState | null>(null);
   const [anchor, setAnchor] = useState<AnchorContact | null>(null);
-  const [mode, setMode] = useState<'idle' | 'habit' | 'sos' | 'exhale'>('idle');
+  const [mode, setMode] = useState<'idle' | 'habit' | 'sos' | 'exhale' | 'meshtrace'>('idle');
+  const [lastStress, setLastStress] = useState<'calm' | 'mild' | 'high' | null>(null);
   const [isHolding, setIsHolding] = useState(false);
   const [holdProgress, setHoldProgress] = useState(0);
   const [exhaleIntensity, setExhaleIntensity] = useState(0);
@@ -319,15 +321,39 @@ export default function App() {
               <p className="text-zinc-500 font-medium uppercase tracking-widest text-xs">Zero-Friction Mental Health</p>
             </div>
 
-            <div className="flex flex-col items-center gap-4">
-              <button
-                onClick={startHabit}
-                className="group relative w-32 h-32 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center transition-all hover:bg-emerald-500/20 active:scale-95"
-              >
-                <div className="absolute inset-0 rounded-full animate-pulse-ring border border-emerald-500/30" />
-                <Heart className="w-10 h-10 text-emerald-400 group-hover:scale-110 transition-transform" />
-              </button>
-              <span className="text-zinc-400 text-sm font-medium">Daily Orbit</span>
+            <div className="flex justify-center gap-8 w-full max-w-sm">
+              <div className="flex flex-col items-center gap-4">
+                <button
+                  onClick={startHabit}
+                  className="group relative w-24 h-24 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center transition-all hover:bg-emerald-500/20 active:scale-95"
+                >
+                  <div className="absolute inset-0 rounded-full animate-pulse-ring border border-emerald-500/30" />
+                  <Heart className="w-8 h-8 text-emerald-400 group-hover:scale-110 transition-transform" />
+                </button>
+                <div className="flex flex-col items-center text-center">
+                  <span className="text-zinc-400 text-xs font-medium uppercase tracking-widest">Orbit</span>
+                  <span className="text-zinc-600 text-[9px] uppercase tracking-widest mt-1">Grounding</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center gap-4">
+                <button
+                  onClick={() => setMode('meshtrace')}
+                  className="group relative w-24 h-24 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center transition-all hover:bg-blue-500/20 active:scale-95"
+                >
+                  <Target className="w-8 h-8 text-blue-400 group-hover:scale-110 transition-transform" />
+                </button>
+                <div className="flex flex-col items-center text-center">
+                  <span className="text-zinc-400 text-xs font-medium uppercase tracking-widest">MeshTrace</span>
+                  <span className={cn("text-[9px] uppercase tracking-widest mt-1",
+                    lastStress === 'calm' ? 'text-emerald-500' :
+                      lastStress === 'mild' ? 'text-amber-500' :
+                        lastStress === 'high' ? 'text-rose-500' : 'text-zinc-600'
+                  )}>
+                    {lastStress === null ? 'Focus Game' : `State: ${lastStress}`}
+                  </span>
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-8 w-full max-w-xs">
@@ -472,6 +498,21 @@ export default function App() {
             >
               I feel better now
             </button>
+          </motion.div>
+        )}
+
+        {mode === 'meshtrace' && (
+          <motion.div
+            key="meshtrace"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-50 text-white"
+          >
+            <MeshTraceGame
+              onClose={() => setMode('idle')}
+              onComplete={(state) => setLastStress(state)}
+            />
           </motion.div>
         )}
       </AnimatePresence>
