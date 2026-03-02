@@ -9,6 +9,7 @@ import { Shield, Heart, Wind, Zap, Settings2, CheckCircle2, AlertTriangle, MapPi
 import { v4 as uuidv4 } from 'uuid';
 import { cn } from './lib/utils';
 import { selectAnchorContact, loadAnchorContact, type AnchorContact } from './lib/contactPicker';
+import { getCurrentLocation, type LocationError } from './lib/location';
 
 // --- Types ---
 interface UserState {
@@ -95,10 +96,17 @@ export default function App() {
     setMode('sos');
     if (navigator.vibrate) navigator.vibrate([500, 200, 500]);
 
-    // Get Location
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      const { latitude, longitude } = pos.coords;
-      const locationUrl = `https://maps.google.com/?q=${latitude},${longitude}`;
+    // Get real-time location using the getCurrentLocation() utility
+    const locationResult = await getCurrentLocation();
+
+    if (locationResult.success) {
+      const { latitude, longitude } = locationResult.coordinates;
+      const locationUrl = locationResult.mapsUrl;
+
+      // Required console output
+      console.log('[SOS] Latitude:', latitude);
+      console.log('[SOS] Longitude:', longitude);
+      console.log('[SOS] Map Link:', locationUrl);
 
       // Read anchor from contactPicker localStorage (anchorContact key)
       const savedAnchor = loadAnchorContact();
@@ -110,10 +118,16 @@ export default function App() {
             body: JSON.stringify({ anchorPhone: savedAnchor.phone, locationUrl }),
           });
         } catch (e) {
-          console.error("SOS API Error", e);
+          console.error('[SOS] API Error:', e);
         }
+      } else {
+        console.warn('[SOS] No anchor contact set — SMS not sent.');
       }
-    });
+    } else {
+      // Location failed — still trigger SOS flow but log the reason
+      const locErr = locationResult as LocationError;
+      console.error('[SOS] Location error:', locErr.errorCode, locErr.message);
+    }
 
     // Auto-transition to Exhale after 3 seconds
     setTimeout(() => setMode('exhale'), 3000);
