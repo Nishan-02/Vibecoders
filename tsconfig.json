@@ -22,5 +22,11 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "resonance-native",
+    "src/lib/contactPicker.expo.ts",
+    "src/lib/location.expo.ts"
+  ]
 }

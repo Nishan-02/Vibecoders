@@ -10,8 +10,27 @@
 }
 
 @layer base {
+
+  html,
   body {
-    @apply bg-[#E8ECFF] text-[#111111] overflow-hidden;
+    @apply bg-[#E8ECFF] text-[#111111];
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  #root {
+    min-height: 100%;
+  }
+
+  /* Hide scrollbar on mobile-like panels but keep functionality */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
